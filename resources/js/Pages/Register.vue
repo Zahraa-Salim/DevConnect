@@ -1,6 +1,7 @@
 <template>
   <Head title="Register" />
-  <div class="min-h-screen flex items-center justify-center p-4">
+  <div class="relative min-h-screen flex items-center justify-center p-4 overflow-hidden">
+    <DevBackground :opacity="0.20" :count="18" />
     <Card class="w-full max-w-[480px] p-[32px]">
       <div class="flex flex-col items-center mb-8">
         <Logo class="mb-6" />
@@ -84,6 +85,7 @@ import Logo from '@/Components/Logo.vue'
 import Card from '@/Components/Card.vue'
 import Button from '@/Components/Button.vue'
 import TextInput from '@/Components/TextInput.vue'
+import DevBackground from '@/Components/DevBackground.vue'
 
 const form = useForm({
   name: '',

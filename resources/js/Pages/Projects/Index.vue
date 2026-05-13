@@ -219,13 +219,17 @@
             </div>
             <div class="flex gap-3">
               <Button
-                v-if="project.owner.id !== $page.props.auth.user.id"
+                v-if="!isProjectOwner(project)"
                 variant="ghost"
                 @click.prevent="messageOwner(project)"
               >
                 Message owner
               </Button>
-              <Button variant="primary" @click.prevent="applyProject(project)">
+              <Button
+                v-if="!isProjectOwner(project)"
+                variant="primary"
+                @click.prevent="applyProject(project)"
+              >
                 Apply
               </Button>
             </div>
@@ -255,7 +259,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Head, Link, router } from '@inertiajs/vue3'
+import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import Card from '@/Components/Card.vue'
 import Button from '@/Components/Button.vue'
@@ -299,6 +303,7 @@ const props = defineProps<{
   aiMatchEnabled: boolean
 }>()
 
+const page = usePage()
 const sortBy = ref('newest')
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
@@ -344,6 +349,10 @@ function openRolesText(project: Project): string {
 
 function membersText(project: Project): string {
   return `${project.members.length} of ${project.max_members} members`
+}
+
+function isProjectOwner(project: Project): boolean {
+  return project.owner.id === page.props.auth.user?.id
 }
 
 function formatDate(date: string): string {

@@ -1,6 +1,7 @@
 <template>
   <Head title="Profile Setup" />
-  <div class="min-h-screen bg-dc-page-bg dark:bg-dc-dark-bg flex flex-col items-center py-12 p-4">
+  <div class="relative min-h-screen bg-dc-page-bg dark:bg-dc-dark-bg flex flex-col items-center py-12 p-4 overflow-hidden">
+    <DevBackground :opacity="0.20" :count="18" />
     <div class="w-full max-w-[640px]">
       <PageHeader title="Set up your profile" />
 
@@ -245,6 +246,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { Head, useForm, usePage } from '@inertiajs/vue3'
+import DevBackground from '@/Components/DevBackground.vue'
 import PageHeader from '@/Components/PageHeader.vue'
 import Card from '@/Components/Card.vue'
 import Button from '@/Components/Button.vue'

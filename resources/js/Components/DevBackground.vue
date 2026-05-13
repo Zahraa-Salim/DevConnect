@@ -30,6 +30,7 @@
         :stroke-linecap="path.lc ?? 'round'"
         :stroke-linejoin="path.lj ?? 'round'"
         :fill="path.fill ?? 'none'"
+        pathLength="100"
         class="draw-path"
         :style="{ '--path-delay': (icon.drawDelay + (pi as number) * 0.08) + 's'}"
       />
@@ -51,7 +52,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   color: '#888780',
-  opacity: 0.18,
+  opacity: 0.20,
   count: 18,
 })
 
@@ -274,11 +275,11 @@ const icons = computed(() => {
       id: i,
       x: Math.max(2, Math.min(92, baseX + jitterX)),
       y: Math.max(2, Math.min(90, baseY + jitterY)),
-      size: 28 + rand() * 24,                // 28–52px
+      size: 34 + rand() * 18,                // 34–52px
       rotate: (rand() - 0.5) * 30,            // ±15 deg
-      floatY: 6 + rand() * 10,                // 6–16px vertical travel
-      duration: 4 + rand() * 4,               // 4–8s float period
-      delay: rand() * 5,                      // stagger start
+      floatY: 12 + rand() * 14,               // 12–26px vertical travel
+      duration: 3 + rand() * 3,               // 3–6s float period
+      delay: rand() * 1.5,                    // stagger start (max 1.5s)
       drawDelay: i * 0.06,                    // staggered draw
       viewBox: def.viewBox,
       paths: def.paths,
@@ -315,10 +316,10 @@ const icons = computed(() => {
 
 /* ── Draw animation: each path traces itself ────────────────────────────────── */
 .draw-path {
-  /* Large enough dasharray to cover any path length */
-  stroke-dasharray: 300;
-  stroke-dashoffset: 300;
-  animation: draw 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  /* pathLength="100" is set on every <path>, so dasharray/offset in [0,100] space */
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: draw 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: var(--path-delay);
 }
 

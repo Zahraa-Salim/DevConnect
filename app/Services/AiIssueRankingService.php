@@ -33,17 +33,17 @@ class AiIssueRankingService
             $startTime = hrtime(true);
 
             try {
-                $response = $this->client->messages->create([
-                    'model'      => self::MODEL,
-                    'max_tokens' => 600,
-                    'system'     => 'You are a contribution matching assistant. Respond ONLY with valid JSON.',
-                    'messages'   => [
+                $response = $this->client->messages->create(
+                    maxTokens: 600,
+                    messages: [
                         [
                             'role'    => 'user',
                             'content' => "Given this developer: {$userContext}\n\nRank these GitHub issues by fit. Return JSON array best first:\n[{\"id\": <id>, \"score\": <0-100>, \"reason\": \"<one sentence>\"}]\nIssues: {$issuesList}",
                         ],
                     ],
-                ]);
+                    model: self::MODEL,
+                    system: 'You are a contribution matching assistant. Respond ONLY with valid JSON.',
+                );
 
                 $latencyMs = (int) ((hrtime(true) - $startTime) / 1_000_000);
 
@@ -60,7 +60,7 @@ class AiIssueRankingService
                 } catch (\RuntimeException) {
                     return [];
                 }
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $latencyMs = (int) ((hrtime(true) - $startTime) / 1_000_000);
 
                 Log::error('AI Issue Ranking failed', [

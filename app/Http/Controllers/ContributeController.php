@@ -60,7 +60,7 @@ class ContributeController extends Controller
                         ->sortByDesc('ai_score')
                         ->values();
                 }
-            } catch (\RuntimeException $e) {
+            } catch (\Throwable $e) {
                 Log::warning('AI Issue Ranking unavailable', ['error' => $e->getMessage()]);
             }
         }
@@ -85,7 +85,7 @@ class ContributeController extends Controller
         try {
             $ranked = (new AiIssueRankingService())->rankIssues($user, $issues);
             return response()->json(['ranked' => $ranked]);
-        } catch (\RuntimeException $e) {
+        } catch (\Throwable $e) {
             return response()->json(['error' => 'AI ranking unavailable'], 503);
         }
     }

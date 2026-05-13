@@ -1,6 +1,8 @@
 <template>
   <Head title="Role Quiz" />
-  <div v-if="isComplete" class="min-h-screen bg-dc-page-bg dark:bg-dc-dark-bg flex flex-col items-center justify-center p-4">
+  <div class="relative min-h-screen overflow-hidden">
+    <DevBackground :opacity="0.20" :count="18" />
+  <div v-if="isComplete" class="min-h-screen bg-dc-page-bg/80 dark:bg-dc-dark-bg/80 flex flex-col items-center justify-center p-4">
     <div class="w-full max-w-[600px]">
       <Card class="text-center">
         <div class="text-center space-y-4 mt-8">
@@ -55,7 +57,7 @@
     </div>
   </div>
 
-  <div v-else class="min-h-screen bg-dc-page-bg dark:bg-dc-dark-bg flex flex-col items-center pt-12 p-4">
+  <div v-else class="min-h-screen bg-dc-page-bg/80 dark:bg-dc-dark-bg/80 flex flex-col items-center pt-12 p-4">
     <div class="w-full max-w-[600px]">
       <!-- Progress Bar -->
       <div class="w-full h-1 bg-dc-surface dark:bg-dc-dark-border rounded-full mb-8 overflow-hidden">
@@ -124,12 +126,14 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import Card from '@/Components/Card.vue'
+import DevBackground from '@/Components/DevBackground.vue'
 import Button from '@/Components/Button.vue'
 
 const questions = [

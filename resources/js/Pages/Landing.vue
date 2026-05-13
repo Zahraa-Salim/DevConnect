@@ -87,7 +87,7 @@
       <!-- ══════════════════════════════════════════════════════════════════════
            SECTION 2 — SOCIAL PROOF NUMBERS
       ══════════════════════════════════════════════════════════════════════ -->
-      <section class="stats-band reveal-section">
+    <!--  <section class="stats-band reveal-section">
         <div class="stats-band__inner">
           <div v-for="stat in stats" :key="stat.label" class="stats-band__item">
             <div class="stats-band__number">{{ stat.value }}</div>
@@ -95,7 +95,7 @@
           </div>
         </div>
       </section>
-
+    -->
 
       <!-- ══════════════════════════════════════════════════════════════════════
            SECTION 3 — FOUR PATHS  (staggered cards)

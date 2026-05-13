@@ -3,8 +3,8 @@
     <div
       class="relative flex items-center justify-center"
       :style="{
-        width: props.size,
-        height: props.size
+        width: props.size * 0.75 + 'px',
+        height: props.size * 0.75 + 'px'
       }"
     >
       <svg
@@ -34,9 +34,9 @@
       <div
         class="spinner-dot absolute rounded-full bg-dc-primary dark:bg-dc-primary-muted"
         :style="{
-          width: props.size * 0.18 + 'px',
-          height: props.size * 0.18 + 'px',
-          '--dot-amplitude': (props.size * 0.09) + 'px'
+          width: props.size * 0.26 + 'px',
+          height: props.size * 0.26 + 'px',
+          '--dot-amplitude': (props.size * 0.07) + 'px'
         }"
       />
     </div>
