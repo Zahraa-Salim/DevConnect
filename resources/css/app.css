@@ -1,0 +1,124 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../js/**/*.{vue,js,ts}';
+
+@theme {
+    --font-sans: 'Inter', 'Arial', system-ui, -apple-system, sans-serif;
+
+    /* DevConnect brand — primary indigo */
+    --color-dc-primary: #534AB7;
+    --color-dc-primary-light: #7F77DD;
+    --color-dc-primary-dark: #3C3489;
+    --color-dc-primary-tint: #EEEDFE;
+    --color-dc-primary-muted: #AFA9EC;
+
+    /* DevConnect brand — coral accent */
+    --color-dc-coral: #D85A30;
+    --color-dc-coral-light: #F0997B;
+    --color-dc-coral-tint: #FAECE7;
+    --color-dc-coral-dark: #712B13;
+
+    /* Dark mode surfaces */
+    --color-dc-dark-bg: #14121F;
+    --color-dc-dark-surface: #1E1A2E;
+    --color-dc-dark-border: #2E2848;
+
+    /* Light surfaces */
+    --color-dc-page-bg: #F8F8FC;
+    --color-dc-surface: #F2F1EB;
+
+    /* Text + neutrals */
+    --color-dc-muted: #888780;
+    --color-dc-body: #444441;
+
+    /* Status colors */
+    --color-dc-success: #1D9E75;
+    --color-dc-success-tint: #E8F5F0;
+    --color-dc-success-dark: #12664B;
+
+    --color-dc-danger: #E24B4A;
+    --color-dc-danger-tint: #FCEEED;
+    --color-dc-danger-dark: #9E3433;
+
+    --color-dc-warning: #BA7517;
+    --color-dc-warning-tint: #FDF5E8;
+    --color-dc-warning-dark: #825210;
+
+    --color-dc-info: #378ADD;
+    --color-dc-info-tint: #EBF4FC;
+    --color-dc-info-dark: #26609A;
+
+    /* Typography scale */
+    --text-display: 36px;
+    --text-display--line-height: 1.2;
+    --text-display--font-weight: 600;
+    --text-display--letter-spacing: -0.4px;
+
+    --text-h1: 24px;
+    --text-h1--line-height: 1.2;
+    --text-h1--font-weight: 500;
+    --text-h1--letter-spacing: -0.4px;
+
+    --text-h2: 18px;
+    --text-h2--line-height: 1.2;
+    --text-h2--font-weight: 500;
+    --text-h2--letter-spacing: -0.4px;
+
+    --text-h3: 16px;
+    --text-h3--line-height: 1.2;
+    --text-h3--font-weight: 500;
+    --text-h3--letter-spacing: -0.4px;
+
+    --text-body: 14px;
+    --text-body--line-height: 1.5;
+    --text-body--font-weight: 400;
+
+    --text-small: 12px;
+    --text-small--line-height: 1.5;
+    --text-small--font-weight: 400;
+
+    --text-label-caps: 11px;
+    --text-label-caps--line-height: 1.5;
+    --text-label-caps--font-weight: 500;
+    --text-label-caps--letter-spacing: 0.07em;
+
+    /* Animations */
+    --animate-spin-arc: spin-arc 2.2s ease-in-out infinite;
+    --animate-bounce-dot: bounce-dot 2.2s ease-in-out infinite;
+    --animate-three-dot: three-dot 1s infinite;
+}
+
+/* Keyframes */
+@keyframes spin-arc {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(240deg); }
+}
+
+@keyframes bounce-dot {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-18%); }
+}
+
+@keyframes three-dot {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+/* Dark mode toggling — class strategy */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Base styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: #F8F8FC;
+    color: #444441;
+}
+
+* {
+    box-sizing: border-box;
+}

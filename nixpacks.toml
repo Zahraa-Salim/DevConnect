@@ -1,0 +1,23 @@
+[phases.setup]
+nixPkgs = ["php82", "php82Extensions.pdo", "php82Extensions.pdo_mysql", "php82Extensions.mbstring", "php82Extensions.tokenizer", "php82Extensions.xml", "php82Extensions.ctype", "php82Extensions.fileinfo", "php82Extensions.bcmath", "php82Extensions.curl", "nodejs_20"]
+cmds = [
+  "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
+]
+
+[phases.install]
+cmds = [
+  "COMPOSER_ALLOW_SUPERUSER=1 php /usr/local/bin/composer install --no-dev --optimize-autoloader --no-scripts",
+  "npm install",
+  "npm run build"
+]
+
+[phases.build]
+cmds = [
+  "APP_URL=http://localhost php artisan package:discover --ansi",
+  "APP_URL=http://localhost php artisan config:cache",
+  "APP_URL=http://localhost php artisan route:cache",
+  "APP_URL=http://localhost php artisan view:cache"
+]
+
+[start]
+cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
