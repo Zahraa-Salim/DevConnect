@@ -13,6 +13,8 @@
     @inertiaHead
 </head>
 <body class="font-sans antialiased">
+    {{-- Inertia difference: this single Blade file is the app shell.
+        The actual screens are Vue components swapped into this mount point. --}}
     @inertia
 </body>
 </html>

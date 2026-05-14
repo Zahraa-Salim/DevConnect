@@ -46,6 +46,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // Public
+// Inertia example: this route does not return a Blade view.
+// It tells the Vue app to render resources/js/Pages/Landing.vue.
 Route::get('/', fn () => Inertia::render('Landing'))->name('landing');
 Route::get('/invite/{token}', [InviteLinkController::class, 'show'])->name('invite.show');
 
