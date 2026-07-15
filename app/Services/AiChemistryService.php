@@ -19,7 +19,7 @@ class AiChemistryService
 
     public function __construct()
     {
-        $apiKey = env('ANTHROPIC_API_KEY');
+        $apiKey = config('anthropic.api_key');
         if (! $apiKey || str_starts_with($apiKey, 'sk-ant-xxxxx')) {
             throw new \RuntimeException('ANTHROPIC_API_KEY is not configured.');
         }

@@ -119,7 +119,7 @@ class GitHubMentorScoringService
             'User-Agent' => 'DevConnect-LB',
         ];
 
-        $token = env('GITHUB_TOKEN');
+        $token = config('services.github.token');
         if ($token) {
             $headers['Authorization'] = "Bearer {$token}";
         }

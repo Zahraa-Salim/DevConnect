@@ -1,0 +1,16 @@
+{
+	# Render terminates TLS at its edge and forwards plain HTTP to $PORT,
+	# so disable Caddy's automatic HTTPS.
+	auto_https off
+	frankenphp
+	admin off
+}
+
+# Bind the port Render injects ($PORT); default to 8080 for local runs.
+:{$PORT:8080} {
+	root * /app/public
+	encode zstd gzip
+
+	# Serve the Laravel front controller (public/index.php) and static assets.
+	php_server
+}

@@ -20,7 +20,7 @@ class FetchGitHubIssuesCommand extends Command
 
     public function handle(): int
     {
-        $token = env('GITHUB_TOKEN');
+        $token = config('services.github.token');
         $headers = ['Accept' => 'application/vnd.github+json'];
         if ($token) {
             $headers['Authorization'] = "Bearer {$token}";

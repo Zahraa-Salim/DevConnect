@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\Conversation;
 use App\Models\ConversationParticipant;
 use App\Models\Message;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
@@ -111,6 +112,54 @@ class ConversationController extends Controller
                 'deleted_at' => $msg->deleted_at,
                 'created_at' => $msg->created_at->toIso8601String(),
             ]),
+        ]);
+    }
+
+    public function searchUsers(Request $request)
+    {
+        $q = $request->query('q', '');
+
+        if (strlen($q) < 2) {
+            return response()->json([]);
+        }
+
+        return User::where('id', '!=', $request->user()->id)
+            ->where('name', 'LIKE', "%{$q}%")
+            ->select('id', 'name', 'avatar_url', 'role')
+            ->limit(10)
+            ->get();
+    }
+
+    public function projectChat(Request $request, Project $project)
+    {
+        $conversation = Conversation::where('project_id', $project->id)
+            ->where('type', 'group')
+            ->where('thread_type', 'main')
+            ->firstOrFail();
+
+        abort_unless(
+            ConversationParticipant::where('conversation_id', $conversation->id)
+                ->where('user_id', $request->user()->id)
+                ->exists(),
+            403
+        );
+
+        // Update last_read_at
+        ConversationParticipant::where('conversation_id', $conversation->id)
+            ->where('user_id', $request->user()->id)
+            ->update(['last_read_at' => now()]);
+
+        $messages = $conversation->messages()
+            ->with('sender:id,name,avatar_url')
+            ->orderBy('created_at', 'asc')
+            ->paginate(50, paginate: false);
+
+        $participants = $conversation->participants()->select('users.id', 'users.name', 'users.avatar_url')->get();
+
+        return response()->json([
+            'conversation' => $conversation,
+            'messages' => $messages,
+            'participants' => $participants,
         ]);
     }
 

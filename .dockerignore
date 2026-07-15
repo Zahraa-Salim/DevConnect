@@ -1,0 +1,36 @@
+# Dependencies (reinstalled inside the image)
+node_modules
+vendor
+
+# VCS + local tooling
+.git
+.gitignore
+.gitattributes
+.github
+.idea
+.vscode
+
+# Secrets / local env (never bake into the image)
+.env
+.env.*
+!.env.example
+
+# Tests
+tests
+phpunit.xml
+.phpunit.result.cache
+
+# Build artifacts (assets are rebuilt in the Node stage)
+public/build
+public/hot
+
+# Runtime-generated storage (kept empty in the image)
+storage/logs/*
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Superseded deploy configs / docs
+nixpacks.toml
+railway.json
+README.md

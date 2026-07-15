@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\GitHubAuthController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\CommunityIdeaController;
 use App\Http\Controllers\AiIdeaController;
@@ -38,25 +39,20 @@ use App\Http\Controllers\Admin\MentorAdminController;
 use App\Http\Controllers\Admin\AnalyticsController as AdminAnalyticsController;
 use App\Http\Controllers\Onboarding\ProfileController as OnboardingProfileController;
 use App\Http\Controllers\Onboarding\QuizController;
-use App\Models\User;
-use App\Models\Project;
-use App\Models\Conversation;
-use App\Models\ConversationParticipant;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 // Public
 // Inertia example: this route does not return a Blade view.
 // It tells the Vue app to render resources/js/Pages/Landing.vue.
-Route::get('/', fn () => Inertia::render('Landing'))->name('landing');
+Route::get('/', [PageController::class, 'landing'])->name('landing');
 Route::get('/invite/{token}', [InviteLinkController::class, 'show'])->name('invite.show');
 
 // Guest-only auth pages
 Route::middleware('guest')->group(function () {
-    Route::get('/login', fn () => Inertia::render('Login'))->name('login');
+    Route::get('/login', [PageController::class, 'login'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 
-    Route::get('/register', fn () => Inertia::render('Register'))->name('register');
+    Route::get('/register', [PageController::class, 'register'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 });
 
@@ -83,7 +79,7 @@ Route::middleware(['auth', 'suspended'])->group(function () {
 // Main authenticated routes require completed onboarding
 Route::middleware(['auth', 'suspended', 'onboarding'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/profile', fn () => redirect()->route('profile.show', auth()->id()))->name('profile');
+    Route::get('/profile', [PageController::class, 'profileRedirect'])->name('profile');
     Route::get('/settings', [SettingsController::class, 'show'])->name('settings');
     Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
@@ -148,18 +144,7 @@ Route::middleware(['auth', 'suspended', 'onboarding'])->group(function () {
     // Messages routes
     Route::get('/messages', [ConversationController::class, 'index'])->name('messages.index');
     Route::post('/messages', [ConversationController::class, 'store'])->name('messages.store');
-    Route::get('/messages/users/search', function () {
-        $q = request()->query('q', '');
-        if (strlen($q) < 2) {
-            return response()->json([]);
-        }
-
-        return User::where('id', '!=', auth()->id())
-            ->where('name', 'LIKE', "%{$q}%")
-            ->select('id', 'name', 'avatar_url', 'role')
-            ->limit(10)
-            ->get();
-    })->name('messages.users.search');
+    Route::get('/messages/users/search', [ConversationController::class, 'searchUsers'])->name('messages.users.search');
     Route::get('/messages/{conversation}', [ConversationController::class, 'show'])->name('messages.show');
     Route::post('/messages/{conversation}/messages', [MessageController::class, 'store'])->name('messages.send');
     Route::put('/messages/msg/{message}', [MessageController::class, 'update'])->name('messages.update');
@@ -242,37 +227,7 @@ Route::middleware(['auth', 'suspended', 'onboarding'])->group(function () {
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
 
     // Group chat endpoint for projects
-    Route::get('/projects/{project}/chat', function (Project $project) {
-        $conversation = Conversation::where('project_id', $project->id)
-            ->where('type', 'group')
-            ->where('thread_type', 'main')
-            ->firstOrFail();
-
-        abort_unless(
-            ConversationParticipant::where('conversation_id', $conversation->id)
-                ->where('user_id', auth()->id())
-                ->exists(),
-            403
-        );
-
-        // Update last_read_at
-        ConversationParticipant::where('conversation_id', $conversation->id)
-            ->where('user_id', auth()->id())
-            ->update(['last_read_at' => now()]);
-
-        $messages = $conversation->messages()
-            ->with('sender:id,name,avatar_url')
-            ->orderBy('created_at', 'asc')
-            ->paginate(50, paginate: false);
-
-        $participants = $conversation->participants()->select('users.id', 'users.name', 'users.avatar_url')->get();
-
-        return response()->json([
-            'conversation' => $conversation,
-            'messages' => $messages,
-            'participants' => $participants,
-        ]);
-    })->name('projects.chat');
+    Route::get('/projects/{project}/chat', [ConversationController::class, 'projectChat'])->name('projects.chat');
 });
 
 // Public profile (no auth required)
