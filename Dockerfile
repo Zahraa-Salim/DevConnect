@@ -33,11 +33,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libpng-dev \
         libjpeg62-turbo-dev \
         libfreetype6-dev \
+        libcap2-bin \
         supervisor \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j"$(nproc)" pdo_pgsql mbstring zip exif pcntl bcmath gd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Render (and many container runtimes) enforce no-new-privileges. Linux refuses
+# to execve() a binary carrying file capabilities under that flag, returning
+# EPERM. FrankenPHP ships with cap_net_bind_service set; strip it since we bind
+# the high $PORT as root and don't need it.
+RUN setcap -r "$(command -v frankenphp)" || true
 
 # Composer binary from the official image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
